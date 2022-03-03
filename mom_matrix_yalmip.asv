@@ -1,0 +1,28 @@
+%% testing script to ensure that the moment matrix indexing functions correctly
+
+load('opt_3_2d.mat')
+
+y_in  = [-1.5; 1];
+y_out = [2; 2];
+
+n = length(x_star{1});
+m = length(x_star);
+
+
+%form and index out the moment matrix. remember that alpha_n is eliminated
+x_index = 1 + (1:n);
+alpha_index = (n+1) + (1:(m-1));
+
+M = sdpvar(n+m);
+
+%variables
+x = M(x_index, 1);
+alpha = [M(alpha_index, 1); 1 - sum(M(1, alpha_index))];
+
+xa = M(x_index, alpha_index);
+
+%start the constraints
+cons = [(M(1,1) == 1):'1=1'; (alpha >= 0):'alpha >= 0'];
+
+%now do the gradient constraints
+for j 
