@@ -56,6 +56,8 @@ cons = [cons; con_alpha2];
 
 dist = sum(y_out.^2 - 2*(x.*y_out) + x2);
 
+cons= [cons; dist >= 0.09; dist <= 0.15]
+
 opts = sdpsettings('solver', 'mosek');
 
 % objective = -alpha(2);
