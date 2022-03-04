@@ -3,7 +3,9 @@
 load('opt_3_2d.mat')
 
 y_in  = [-1.5; 1];
-y_out = [2; 2];
+y_out = [1; 0];
+y_out = y_in;
+% y_out = [-1; 0];
 
 n = length(x_star{1});
 m = length(x_star);
@@ -38,21 +40,35 @@ cons = [cons; (grad_term==0):'KKT stationarity'];
 %alphai^2 <= 1
 %alphai*alphaj <= 0.25 if i~=j
 con_alpha2 = [];
+con_alpha2_m = [];
+% for i = 1:(m-1)
+%     sum(
 for i = 1:(m-1)
     curr_i = alpha_index(i);
     %on diagonal
-    con_alpha2 = [con_alpha2; M(curr_i, curr_i) <= 1];
+%     con_alpha2 = [con_alpha2; M(curr_i, curr_i) <= 1];
+    con_alpha2 = [con_alpha2; M(curr_i, curr_i) <= alpha(i)];
+    
+    m_term_off =alpha(i) - M(curr_i, alpha_index);
+    con_alpha2_m = [con_alpha2_m; m_term_off <= 0.25; m_term_off >= 0];
     %off diagonal
     for j = 1:(i-1)        
-        curr_j = alpha_index(i);
-        con_alpha2 = [con_alpha2; M(curr_i, curr_j) <= 0.25; M(curr_i, curr_j) >= 0];
+        curr_j = alpha_index(j);
+        con_alpha2 = [con_alpha2; M(curr_i, curr_j) <= 0.25; ...
+            M(curr_i, curr_j) >= 0; M(curr_i, curr_j) <= alpha(i)];
     end
 end
+%alpham^2 <= 1
+all_m_term = 1 - sum(alpha) + sum(sum(M(alpha_index, alpha_index)));
+con_alpha2_m = [con_alpha2_m; all_m_term <= 1; all_m_term >= 0];
+%now deal with the last alpha(m)
 
-cons = [cons; con_alpha2:'redundant alpha'];
+dist = sum(y_out.^2 - 2*(x.*y_out) + x2);
+
+cons = [cons; con_alpha2; con_alpha2_m; dist>=0];
 
 
-dist = sum(y_out. - 2*(x.*y_out) + x2);
+
 
 opts = sdpsettings('solver', 'mosek');
 
@@ -60,5 +76,8 @@ opts = sdpsettings('solver', 'mosek');
 
 opt = optimize(cons, dist, opts)
 
-M_rec = value(M);
-Mx = value(M()
+M_rec = value(M)
+x_rec = value(x);
+alpha_rec = [value(alpha); 1-sum(value(alpha))];
+Mx = value(M(1:(n+1), 1:(n+1)));
+dist_rec = sqrt(value(dist))

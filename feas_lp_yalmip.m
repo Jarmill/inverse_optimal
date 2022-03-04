@@ -7,7 +7,8 @@ load('opt_3_2d.mat')
 y_in  = [-1.5; 1];
 y_out = [2; 2];
 % y_test = [1.3086; 1.0162];
-y_test = [1.3; 1.0];
+% y_test = [1.3; 1.0];
+y_test = [-1.2765; 0.2654];
 
 % [alpha_rec, opt] = GO_contain(y_in, Q, x_star);
 % [alpha_rec, opt] = GO_contain(y_out, Q, x_star);
