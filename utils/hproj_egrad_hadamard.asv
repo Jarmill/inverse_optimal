@@ -9,7 +9,7 @@ grad_perp_alpha = hproj_egrad(alpha, Q, x_star, y, perp_proj);
 
 grad_z = 2*z.*grad_perp_alpha;
 
-
+grad_z = grad_z * 2
 grad_perp = grad_z - (z'*grad_z)*z;
 
 end
