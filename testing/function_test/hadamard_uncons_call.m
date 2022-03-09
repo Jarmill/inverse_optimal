@@ -1,7 +1,9 @@
 rng(33, 'twister')
 load('opt_5_2d.mat')
+% load('opt_3_2d.mat')
 
-y = [2; 1];
+% y = [2; 1];
+y = [-2; -3];
 
 % [SDP_out,recoverdata,diagnostic,interfacedata] = sdp_full_uncons(y, Q, x_star);
 
@@ -24,12 +26,19 @@ problem.egrad = @(z) hproj_egrad_hadamard(z, Q, x_star, y, 0);
 
 checkgradient(problem);
  
-[x, xcost, info, options] = trustregions(problem);
+[z_rec, xcost, info, options] = trustregions(problem);
+
+%% recover results
 
 figure;
 semilogy([info.iter], [info.gradnorm], '.-');
 xlabel('Iteration number');
 ylabel('Norm of the gradient of f');
+
+dist_manopt = sqrt(xcost*2);
+alpha_rec = z_rec.*z_rec;
+x_rec = x_opt_uncons(alpha_rec, Q, x_star);
+grad_alpha_rec = hproj_egrad(alpha_rec, Q, x_star, y, 0);
 
 % problem.cost = @(xin) norm(xin.A-y);
 
