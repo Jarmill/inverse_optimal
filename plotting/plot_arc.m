@@ -19,6 +19,7 @@ function [h_arc, h_hess, varargout]  = plot_arc(Q, x_star, alpha, n_ell, levels,
 %   the two given quadratic functions
 %   n_ell ~ scalar indicating number of points used to generate the
 %   levels ~ scalar or array of the same length as alpha
+%   cmap ~ colormap (length(alpha)x3)
 %   
 %   Outputs:
 %   h_arc ~ handles of the plotted piece-wise arc
