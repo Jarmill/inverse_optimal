@@ -11,7 +11,7 @@ sdpnalpath      = '../SDPNAL+v1.0'; % required for ADMM+
 
 %% Load problem data
 
-load("sdp_opt_5.mat")
+load("sdp_opt_5_dual_mix.mat")
 load('opt_5_2d.mat')
 
 
@@ -36,20 +36,19 @@ options.rrFunName       = 'local_search_uncons'; % name of the .m file that impl
 % options.rrPar = 
 
 
-
 rrPar = struct;
 rrPar.Q = Q;
 rrPar.x_star = x_star;
 rrPar.y = y;
-% rrPar.m = m;
+options.rrPar = rrPar;
 % Primal initialization
 X0                  = [];
 
 % options.printlevel      = false;
 
 % call STRIDE
-[outPGD,Xopt,yopt,Sopt] = PGDSDP(SDP_out.blk, SDP_out.A, SDP_out.b, SDP_out.C, X0, options);
-infostride              = get_performance_quasar(Xopt,yopt,Sopt,SDP,R_gt);
+[outPGD,Xopt,yopt,Sopt] = PGDSDP(SDP_mix.blk, SDP_mix.A, SDP_mix.b, SDP_mix.C, X0, options);
+% infostride              = get_performance_quasar(Xopt,yopt,Sopt,SDP,R_gt);
 
 
 

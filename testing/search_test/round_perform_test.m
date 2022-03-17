@@ -1,5 +1,5 @@
 %% call the rounding code directly, and test on the SDP generated solution
-load("sdp_opt_5.mat")
+load("sdp_opt_5_dual.mat")
 load('opt_5_2d.mat')
 n = length(x_star{1});
 m = length(x_star);
