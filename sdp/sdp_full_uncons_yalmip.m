@@ -1,4 +1,4 @@
-function [model,recoverdata,diagnostic,interfacedata] = sdp_full_uncons(y, Q, x_star)
+function [model,recoverdata,diagnostic,interfacedata] = sdp_full_uncons(y, Q, x_star, solver)
 %SDP_FULL_UNCONS: create an SDP in SDPT3 format for the distance to inverse
 %optimal control problem
 %
@@ -12,6 +12,11 @@ function [model,recoverdata,diagnostic,interfacedata] = sdp_full_uncons(y, Q, x_
 
 %% create indexers and define variables
 %form and index out the moment matrix. remember that alpha_n is eliminated
+if nargin <= 4
+    solver = 'sdpt3';
+end
+    
+
 n = length(x_star{1});
 m = length(x_star);
 
@@ -66,7 +71,7 @@ cons = [cons; con_alpha2:'off-diagonal constraints'];
 dist = sum(y.^2 - 2*(x.*y) + x2);
 cons = [cons; (dist>=0):'distance is nonnegative'];
 
-opts = sdpsettings('solver', 'sedumi');
+opts = sdpsettings('solver', solver);
 
 % SDP
 [model,recoverdata,diagnostic,interfacedata] = export(cons, dist, opts);
