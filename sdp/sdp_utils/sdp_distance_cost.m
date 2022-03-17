@@ -1,4 +1,4 @@
-function [C] = sdp_distance_cost(y_in, n, m)
+function [C] = sdp_distance_cost(y, n, m)
 %SDP_COST generate the distance cost for the Uncons SDP
 %   distance from in moment matrix from x to y.
 %1/2 norm(y-x, 2)^2 = (sum(x.^2) + sum(y.^2) - sum(2 x.*y))

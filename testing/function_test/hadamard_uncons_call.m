@@ -35,7 +35,7 @@ semilogy([info.iter], [info.gradnorm], '.-');
 xlabel('Iteration number');
 ylabel('Norm of the gradient of f');
 
-dist_manopt = sqrt(xcost*2);
+dist_manopt = sqrt(xcost);
 alpha_rec = z_rec.*z_rec;
 x_rec = x_opt_uncons(alpha_rec, Q, x_star);
 grad_alpha_rec = hproj_egrad(alpha_rec, Q, x_star, y, 0);

@@ -47,34 +47,34 @@ end
 %should probably drop.
 %the set of alphas describing a valid point is a polytope
 
-if perp_proj == 3
-    grad_perp = grad - sum(grad)/m;
-elseif perp_proj == 2
-    %TODO: validate this, fix in case m <= n+1 (?)
-    Qx_star = zeros(n+1, m);
-    % x_opt = x_opt_uncons(alpha, Q, x_star);
-    %find orthogonal projector to sum_j alpha_j Q_j(xstar-x0_j) = 0
-    for j = 1:m
-        Qx_star(1:(end-1), j) = Q{j}*(x_opt - x_star{j});
-    end
-    Qx_star(end, :) = 1;
-
-    % proj_matrix = Qx_star'*((Qx_star*Qx_star') \ Qx_star);
-    grad_proj = Qx_star'*((Qx_star*Qx_star') \ (Qx_star * grad));
-    grad_perp = grad - grad_proj;
-elseif perp_proj == 1
-    %do not perform projection against  simplex constraint
-    %TODO: validate this, fix in case m <= n+1 (?)
-    Qx_star = zeros(n, m);
-    % x_opt = x_opt_uncons(alpha, Q, x_star);
-    %find orthogonal projector to sum_j alpha_j Q_j(xstar-x0_j) = 0
-    for j = 1:m
-        Qx_star(1:(end), j) = Q{j}*(x_opt - x_star{j});
-    end
-
-    % proj_matrix = Qx_star'*((Qx_star*Qx_star') \ Qx_star);
-    grad_proj = Qx_star'*((Qx_star*Qx_star') \ (Qx_star * grad));
-    grad_perp = grad - grad_proj;
-else
+% if perp_proj == 3
+%     grad_perp = grad - sum(grad)/m;
+% elseif perp_proj == 2
+%     %TODO: validate this, fix in case m <= n+1 (?)
+%     Qx_star = zeros(n+1, m);
+%     % x_opt = x_opt_uncons(alpha, Q, x_star);
+%     %find orthogonal projector to sum_j alpha_j Q_j(xstar-x0_j) = 0
+%     for j = 1:m
+%         Qx_star(1:(end-1), j) = Q{j}*(x_opt - x_star{j});
+%     end
+%     Qx_star(end, :) = 1;
+% 
+%     % proj_matrix = Qx_star'*((Qx_star*Qx_star') \ Qx_star);
+%     grad_proj = Qx_star'*((Qx_star*Qx_star') \ (Qx_star * grad));
+%     grad_perp = grad - grad_proj;
+% elseif perp_proj == 1
+%     %do not perform projection against  simplex constraint
+%     %TODO: validate this, fix in case m <= n+1 (?)
+%     Qx_star = zeros(n, m);
+%     % x_opt = x_opt_uncons(alpha, Q, x_star);
+%     %find orthogonal projector to sum_j alpha_j Q_j(xstar-x0_j) = 0
+%     for j = 1:m
+%         Qx_star(1:(end), j) = Q{j}*(x_opt - x_star{j});
+%     end
+% 
+%     % proj_matrix = Qx_star'*((Qx_star*Qx_star') \ Qx_star);
+%     grad_proj = Qx_star'*((Qx_star*Qx_star') \ (Qx_star * grad));
+%     grad_perp = grad - grad_proj;
+% else
     grad_perp = grad;
-end
+% end

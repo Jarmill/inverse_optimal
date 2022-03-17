@@ -61,7 +61,7 @@ v_rec = [1; x_rec; alpha_rec];
 Xmat = v_rec * v_rec';
 
 % Xmat= 0;
-pobjround = 0.5*norm(x_rec - y, 2)^2;
+pobjround = norm(x_rec - y, 2)^2;
 % info = 0;
 
 info.pobjround = pobjround;
