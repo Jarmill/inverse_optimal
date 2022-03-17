@@ -9,6 +9,11 @@ n = 3;
 % Number of random matrices to generate
 nf = 5;
 
+
+
+
+
+
 % Get random Q's and x's
 Q = generate_random_Q(n, nf, [0.5 3]);
 x_star = generate_random_x(n, nf, [2 5]);

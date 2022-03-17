@@ -66,7 +66,7 @@ cons = [cons; con_alpha2:'off-diagonal constraints'];
 dist = sum(y.^2 - 2*(x.*y) + x2);
 cons = [cons; (dist>=0):'distance is nonnegative'];
 
-opts = sdpsettings('solver', 'sdpt3');
+opts = sdpsettings('solver', 'sedumi');
 
 % SDP
 [model,recoverdata,diagnostic,interfacedata] = export(cons, dist, opts);
