@@ -14,14 +14,29 @@ M = Z{end};
 % x_index = 1 + (1:n);
 alpha_index = (opt.n+1) + (1:(opt.m));
 aug_index = [1, alpha_index];
-% M_alpha = M(aug_index, aug_index);
+M_alpha = M(aug_index, aug_index);
 
 %extract the top eigenvector from the moment matrix of alpha
-% [alpha_rec, lam_rec] = eigs(M_alpha, 1);
+%then project on to the simplex
+[v_rec, lam_rec] = eigs(M_alpha, 1);
+
+alpha_rec_infeas = v_rec/v_rec(1);
+alpha_rec_feas = simplex_project(alpha_rec_infeas(2:end)')';
 
 %an extremely rough rounding method based on the pseudomoments
 %TODO: replace this with top eigenvalue
-alpha_rec = M(alpha_index, 1);
+alpha_rec_mom = M(alpha_index, 1);
+
+cost_feas = opt.cost(alpha_rec_feas);
+cost_mom = opt.cost(alpha_rec_mom);
+alpha_rec_mom(alpha_rec_mom <= 0) = 0;
+
+%take the rounded alpha with the smaller cost.
+if cost_feas <= cost_mom
+    alpha_rec = alpha_rec_feas;
+else
+    alpha_rec = alpha_rec_mom;
+end
 
 if nargout == 2
 %now get the x point associated with the alpha (may not be necessary)

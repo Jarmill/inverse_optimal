@@ -12,8 +12,8 @@ function [Xmat,pobjround,info] = local_search_uncons(Zmat,C,rrPar,opt,roundonly)
 % pobjround: primal SDP cost attained by Xmat
 
 %
-x_star = rrPar.x_star;
 Q = rrPar.Q;
+x_star = rrPar.x_star;
 y = rrPar.y;
 
 n = length(x_star{1});
@@ -28,7 +28,8 @@ if nargin < 4
 end
 
 %extract the variate information
-opt_round = struct('n', n, 'm', m, 'x_opt', @(alpha) x_opt_uncons(alpha, Q, x_star));
+opt_round = struct('n', n, 'm', m, 'x_opt', @(alpha) x_opt_uncons(alpha, Q, x_star),...
+    'cost', @(alpha) cost_uncons_alpha(alpha, Q, x_star, y));
 
 [alpha_rec, x_rec] = round_alpha_matrix(Zmat, opt_round);
 

@@ -18,13 +18,15 @@ problem.cost = @(z) cost_uncons_alpha(z.^2, Q, x_star, y);
 problem.egrad = @(z) hproj_egrad_hadamard(z, Q, x_star, y, 0);
 
 if nargin == 5
-    problem.X0 = sqrt(alpha0);
+%     problem.X0 = sqrt(alpha0);
+    z0 = sqrt(alpha0);
+    [z_rec, xcost, info, options] = trustregions(problem, z0);
+else
+    [z_rec, xcost, info, options] = trustregions(problem);
+
 end
 
 % checkgradient(problem);
- 
-[z_rec, xcost, info, options] = trustregions(problem);
-
 
 
 

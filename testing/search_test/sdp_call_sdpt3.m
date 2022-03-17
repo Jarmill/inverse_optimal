@@ -1,3 +1,4 @@
+%% only call the SDP, no rounding
 load('opt_5_2d.mat')
 
 SOLVE = 1;
