@@ -1,4 +1,4 @@
-function [model,recoverdata,diagnostic,interfacedata] = sdp_full_uncons_yalmip(y, Q, x_star, solver)
+function [Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star)
 %SDP_FULL_UNCONS: create an SDP in SDPT3 format for the distance to inverse
 %optimal control problem
 %
@@ -9,13 +9,14 @@ function [model,recoverdata,diagnostic,interfacedata] = sdp_full_uncons_yalmip(y
 %   y:      test point outside the GO set
 %   Q:      Dictionary of hessians
 %   x_star: Corresponding optimal points to quadratic functions
-
+%
+%Outputs 
+%   Fd:     YALMIP constraints
+%   objd:   YALMIP objective for distance (primalized)
+%   indexer:index and output structure
 %% create indexers and define variables
 %form and index out the moment matrix. remember that alpha_n is eliminated
-if nargin <= 4
-    solver = 'sdpt3';
-end
-    
+
 
 n = length(x_star{1});
 m = length(x_star);
@@ -52,9 +53,14 @@ cons = [cons; (grad_term==0):'KKT stationarity'];
 %these redundant constraints arise from the preordering on inequality and
 %equality constraints, and other properties of symmetric polynomials over
 %the probability simplex
-con_alpha_diag = (sum(M(alpha_index, alpha_index), 2) == alpha);
+% con_alpha_diag = (sum(M(alpha_index, alpha_index), 2) == alpha);
 
-cons = [cons; con_alpha_diag:'alpha(i) sum(alpha) = alpha(i)'];
+con_alpha_diag_sum = (sum(M(alpha_index, alpha_index), 2) == alpha);
+con_alpha_diag_cmp = diag(M(alpha_index, alpha_index)) <= alpha;
+cons = [cons; con_alpha_diag_cmp:'alpha(i)^2 <= alpha(i)'; ...
+    con_alpha_diag_sum:'alpha(i) sum(alpha) = alpha(i)'];
+
+% cons = [cons; con_alpha_diag:'alpha(i) sum(alpha) = alpha(i)'];
 con_alpha2 = [];
 for i = 1:(m)
     curr_i = alpha_index(i);
@@ -75,13 +81,15 @@ dist = sum(M(1,1)*y.^2 - 2*(x.*y) + x2);
 cons = [cons; (dist>=0):'distance is nonnegative'];
 
 objective = dist;
-opts = sdpsettings('solver', solver);
+
 
 %dualize the yalmip model to get the problem into primal form (constraints
 %in moment matrix and scalar inequalities)
 [Fd, objd] = dualize(cons, objective);
 
-[model,recoverdata,diagnostic,interfacedata] = export(Fd, -objd, opts);
+indexer = struct('x', x_index, 'a', alpha_index, 'const', 1, 'M', M, 'dist', dist);
+
+% [model,recoverdata,diagnostic,interfacedata] = export(Fd, -objd, opts);
 
 % SDP
 % [model,recoverdata,diagnostic,interfacedata] = export(cons, dist, opts);

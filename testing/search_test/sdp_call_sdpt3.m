@@ -7,7 +7,8 @@ SOLVE = 1;
 
 y_out = [2; 1];
 
-[SDP_out,recoverdata,diagnostic,interfacedata] = sdp_full_uncons_yalmip(y_out, Q, x_star);
+% [SDP_out,recoverdata,diagnostic,interfacedata] = sdp_full_uncons_yalmip(y_out, Q, x_star);
+[SDP_out, indexer, info] = uncons_export(y_out, Q, x_star);
 
 if SOLVE
 [obj,X,y,Z,info,runhist] = sdpt3(SDP_out.blk,SDP_out.A,SDP_out.C,SDP_out.b); %,OPTIONS,X0,y0,Z0)
