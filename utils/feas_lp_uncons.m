@@ -1,4 +1,4 @@
-function [alpha] = feas_lp_uncons(y, Q, x_star, f)
+function [alpha, exitflag] = feas_lp_uncons(y, Q, x_star, f)
 %FEAS_UNCONS: is the point y a global optimum of (Q, x_star)?
 % does there exist simplex-weights alpha such that:
 % y = x_opt_uncons(alpha, Q, x_star)?
@@ -28,9 +28,11 @@ beq = [zeros(n, 1); 1];
 A = -speye(m);
 b = sparse(m, 1);
 
-options = optimset('linprog');
-options.Display = 'off';
+% options = optimset('linprog');
+% options.Display = 'on';
 
+options = optimoptions('linprog');
+% options.linprog.algorithm = 'interior-point';
 [alpha, fval, exitflag, output] = linprog(f, A, b, Aeq, beq, [], [],options);
 
 end

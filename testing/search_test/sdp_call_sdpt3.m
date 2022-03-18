@@ -17,5 +17,5 @@ dist_rec = sqrt(obj(2));
 M = X{end};
 
 % save('sdp_opt_5.mat', 'SDP_out', 'M', 'Z');
-save('sdp_opt_5_dual.mat', 'SDP_out', 'M', 'X', 'y', 'Z', 'obj');
+% save('sdp_opt_5_dual.mat', 'SDP_out', 'M', 'X', 'y', 'Z', 'obj');
 end

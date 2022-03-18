@@ -18,8 +18,8 @@ rrPar.y = y;
 
 
 % try rounding alone
-[Xmat_round, pobjround_round, info_round] = local_search_uncons(Z, [], rrPar, [], true);
+[Xmat_round, pobjround_round, info_round] = local_search_uncons(X, [], rrPar, [], true);
 
 
 % % try calling manopt
-[Xmat_manopt, pobjround_manopt, info_manopt] = local_search_uncons(Z, [], rrPar, [], false);
+[Xmat_manopt, pobjround_manopt, info_manopt] = local_search_uncons(X, [], rrPar, [], false);
