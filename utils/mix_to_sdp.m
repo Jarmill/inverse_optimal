@@ -5,6 +5,8 @@ function [SDP_new] = mix_to_sdp(SDP_old)
 %   linear constraints, where are linear 'l' variables are defined before the
 %   PSD variables, and there are no free variables 'f'.
 
+%Author: Jared Miller, Mar 18, 2022
+
 n_l = SDP_old.blk{1, 2};
 
 ncon = length(SDP_old.b);
