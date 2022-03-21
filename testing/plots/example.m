@@ -5,14 +5,9 @@ close all;
 clc;
 
 % Dimension
-n = 2;
+n = 3;
 % Number of random matrices to generate
 nf = 5;
-
-addpath('../../plotting/');
-
-
-
 
 % Get random Q's and x's
 Q = generate_random_Q(n, nf, [0.5 3]);
@@ -41,14 +36,14 @@ for ii = 1 : length(h_lev)
     h_lev(ii).HandleVisibility = 'Off';
 end
 
-% Plot arc
-randarc = [1 nf];
-alpha_arc = linspace(0, 1, 1000);
-alpha_hess = linspace(0, 1, 5);
-[h_arc, h_hess, x_arc, H_arc, x_hess, H_hess] = plot_arc(Q( randarc ), x_star( randarc ), alpha_arc, alpha_hess, 1000, 1);
-for ii = 1 : length(h_hess)
-    h_hess(ii).HandleVisibility = 'Off';
-end
+% % Plot arc
+% randarc = [1 nf];
+% alpha_arc = linspace(0, 1, 1000);
+% alpha_hess = linspace(0, 1, 5);
+% [h_arc, h_hess, x_arc, H_arc, x_hess, H_hess] = plot_arc(Q( randarc ), x_star( randarc ), alpha_arc, alpha_hess, 1000, 1);
+% for ii = 1 : length(h_hess)
+%     h_hess(ii).HandleVisibility = 'Off';
+% end
 % Esthetics
 if n == 3
     view(3)
