@@ -12,8 +12,11 @@ addpath('../plotting');
 % filename = 'opt_3_2d.mat';
 filename = 'opt_5_2d.mat';
 load(filename);
-Q = Q(1:2);
-x_star = x_star(1:2);
+% Q = Q(1:2);
+% x_star = x_star(1:2);
+
+Q = {[0.8, 0.5; 0.5, 0.8], [1.25, 0.2; 0.2, 0.7]};
+x_star = {[2; 0.5], [-3; -2]};
 
 % Q = Q(4:5);
 % x_star = x_star(4:5);
@@ -70,7 +73,7 @@ scatter(x_view(1, :), x_view(2, :), 400, copper(N_view), 'filled')
 
 xlabel('$x_1$', 'FontSize', 15, 'FontWeight', 'bold', 'Interpreter', 'LaTeX');
 ylabel('$x_2$', 'FontSize', 15, 'FontWeight', 'bold', 'Interpreter', 'LaTeX');
-title(sprintf('Set of global optima $\\mathcal{G}$'), 'Interpreter', 'LaTeX', 'FontSize', 16);
+title(sprintf('Set of global optima $\\mathcal{G}$'), 'Interpreter', 'LaTeX', 'FontSize', 20);
 % legend('Interpreter', 'LaTeX', 'Location', 'eastoutside');
 cbar = colorbar('east', 'AxisLocation','out');
 cbar.Label.String = '\alpha';
