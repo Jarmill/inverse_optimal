@@ -25,7 +25,8 @@ function [h_arc, h_hess, varargout]  = plot_arc(Q, x_star, alpha_arc, alpha_hess
 %   
 %   Outputs:
 %   h_arc ~ handles of the plotted arc
-%   x ~ cell array of 
+%   x ~ cell array of optimal points of the mixture
+%   H ~ cell array of hessians of the mixture
 
 % Get the number of cost functions in the library
 nf = length(Q);
