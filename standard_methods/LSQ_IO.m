@@ -1,7 +1,7 @@
 function [x, alpha, d] = LSQ_IO(Q, x_star, y, alpha0)
 %LSQ_IO performs the LSQ formulation of the inverse optimization problem
 %with quadratic functions.
-%   [x, alpha, d] = LSQ_IO(Q, x_star, y, z0)
+%   [x, alpha, d] = LSQ_IO(Q, x_star, y, alpha0)
 %   
 %   Inputs:
 %   Q ~ cell array of symmetric positive definite matrices of the
