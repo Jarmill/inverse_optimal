@@ -115,7 +115,7 @@ elseif n == 3
     % Else draw the convex hull of the shape
     CH = convhull(V(1, :), V(2, :), V(3, :),'Simplify',true);
     % Remove lines as it make the view sketchy
-    h = trisurf(CH, V(1, :), V(2, :), V(3, :), 'FaceColor', cool(1), 'FaceAlpha', 0, 'LineStyle', '--', varargin{:});
+    h = trisurf(CH, V(1, :), V(2, :), V(3, :), 'FaceColor', cool(1), 'FaceAlpha', 0, 'LineStyle', '-', varargin{:});
     return
 end
 

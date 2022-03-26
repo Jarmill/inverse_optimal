@@ -7,7 +7,8 @@ function h  = plot_mathcal_G_constrained(Q, phi, A, b, C, d, xl, xu, n_grid, n_m
 %   - Call figure before this function
 %
 %   h = PLOT_MATHCAL_G(Q, phi, A, b, C, d, xl, xu, n_grid, n_mesh)
-%   h = PLOT_MATHCAL_G(Q, phi, A, b, C, d, xl, xu, n_grid, n_mesh, smoothness)
+%   h = PLOT_MATHCAL_G(Q, phi, A, b, C, d, xl, xu, n_grid, n_mesh, dots_vs_shape)
+%   h = PLOT_MATHCAL_G(Q, phi, A, b, C, d, xl, xu, n_grid, n_mesh, dots_vs_shape, smoothness)
 %
 %   Inputs:
 %   Q ~ cell array of positive semidefinite matrices defining the quadratic
@@ -18,6 +19,9 @@ function h  = plot_mathcal_G_constrained(Q, phi, A, b, C, d, xl, xu, n_grid, n_m
 %   should be calculated to generate the mesh
 %   n_mesh ~ number of points that should be, at most, used to represent
 %   solutions of quadratics that have mutliple solutions
+%   dots_vs_shape ~ flag indicating whether we represent the set using a
+%   cloud of dots or an alphashape (false for dots, true for alphashape,
+%   default is alphashape).
 %   smoothness ~ the scalar alpha parameter of the alphaShape representing 
 %   the sets mesh
 %   
@@ -32,6 +36,35 @@ n = size(Q{1}, 1);
 % Check the size of input
 if n ~= 2 && n ~= 3
     error("Dimensionality of the problem is not 2D nor 3D. Please supply 2D or 3D x_stars.");
+end
+
+% Treat inputs:
+% First argument is passed
+if length(varargin) >= 1
+    % Check validity
+    if ~islogical(varargin{1}) && ~isscalar(varargin{1})
+        error('dots_vs_shape parameter must be of a numeric scalar or logical type.');
+    end
+    % If it is numeric or logical assign its value
+    shape = varargin{1};
+% First argument is not passed
+else
+    % Default value is true (corresponds to alphashape representation)
+    shape = true;
+end
+
+% Second argument is passed
+if length(varargin) >= 2
+    % Check validity
+    if ~isscalar(varargin{1})
+        error('smoothness parameter must be of a numeric scalar type.');
+    end
+    % If it is logical assign its value
+    smoothness = varargin{1};
+% First argument is not passed
+else
+    % Default value is false (doesn't set smoothness)
+    smoothness = false;
 end
 
 % Initialize the affine dimension of the simplex of parametrizations
@@ -72,23 +105,40 @@ size(xcomb)
 
 % Get the set shape differently for 2D and 3D
 if n == 2
-    % Get the 2D shape differently if smoothness parameter is given
-    if ~isempty(varargin)
-        set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', varargin{1});
+    % Differentiate between black dot and shape representation
+    % If shape
+    if shape    
+        % Get the 2D shape differently if smoothness parameter is given
+        if smoothness
+            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', smoothness);
+        else
+            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).');
+        end
+        % Get the shape plot
+        h = plot(set_shape);
+    % If dots
     else
-        set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).');
+        % Get the dots
+        h = plot(xcomb(1, :), xcomb(2, :), 'k.', 'MarkerSize', 20, 'LineStyle', 'None', 'LineWidth', 2);
     end
-    % Get the plot
-    h = plot(set_shape);
+    
+% 3D
 elseif n == 3
-    % Get the 3D shape differently if smoothness parameter is given
-    if ~isempty(varargin)
-        set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).', varargin{1});
+    % If shape
+    if shape    
+        % Get the 3D shape differently if smoothness parameter is given
+        if smoothness
+            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).', varargin{1});
+        else
+            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).');
+        end
+        % Get the shape plot
+        h = plot(set_shape);
+    % If dots
     else
-        set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).');
+        % Get the dots
+        h = plot3(xcomb(1, :), xcomb(2, :), xcomb(3, :), 'k.', 'MarkerSize', 20, 'LineStyle', 'None', 'LineWidth', 2);
     end
-    % Get the plot
-    h = plot(set_shape);
 end
 
 

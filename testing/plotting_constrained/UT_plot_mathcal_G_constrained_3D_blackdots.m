@@ -62,10 +62,10 @@ h_feas.DisplayName = sprintf('$X \\quad (x \\in X)$');
 % % Plot the set of all optima
 n_mesh = 10;
 m_grid = 1500;
-h_combined_sol = plot_mathcal_G_constrained(Q, phi, A, b, C, d, xl, xu, m_grid, n_mesh);
+h_combined_sol = plot_mathcal_G_constrained(Q, phi, A, b, C, d, xl, xu, m_grid, n_mesh, false);
 h_combined_sol.DisplayName = sprintf('$\\mathcal{G} =  \\{x | \\alpha_{%d : %d} \\} $', 1, nf);
 h_combined_sol.LineStyle = 'none';
-h_combined_sol.FaceAlpha = 1;
+% h_combined_sol.FaceAlpha = 1;
 
 % Plot minima
 h_star = plot_x_star_constrained(Q, phi, A, b, C, d, xl, xu, 150, copper(nf));
