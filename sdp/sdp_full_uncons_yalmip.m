@@ -1,4 +1,4 @@
-function [Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star)
+function [Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star, DUAL)
 %SDP_FULL_UNCONS: create an SDP in SDPT3 format for the distance to inverse
 %optimal control problem
 %
@@ -17,6 +17,9 @@ function [Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star)
 %% create indexers and define variables
 %form and index out the moment matrix. remember that alpha_n is eliminated
 
+if nargin < 4
+    DUAL = 0;
+end
 
 n = length(x_star{1});
 m = length(x_star);
@@ -47,7 +50,7 @@ for j = 1:m
     grad_term = grad_term + curr_term;
 end
 
-cons = [cons; (grad_term==0):'KKT stationarity'];
+cons = [cons; (grad_term==0):'Gradient = 0'];
 
 %% redundant constraints (valid inequalities)
 %these redundant constraints arise from the preordering on inequality and
@@ -85,7 +88,12 @@ objective = dist;
 
 %dualize the yalmip model to get the problem into primal form (constraints
 %in moment matrix and scalar inequalities)
-[Fd, objd] = dualize(cons, objective);
+if DUAL
+    [Fd, objd] = dualize(cons, objective);
+else
+    Fd = cons;
+    objd = objective;
+end
 
 indexer = struct('x', x_index, 'a', alpha_index, 'const', 1, 'M', M, 'dist', dist);
 

@@ -2,6 +2,8 @@ function [SDP] = sdp_full_uncons(y, Q, x_star)
 %SDP_FULL_UNCONS: create an SDP in SDPT3 format for the distance to inverse
 %optimal control problem
 %
+% Work in progress, abandoned.
+%
 %alpha_n is not eliminated in this formulation (will be in the next one)
 %
 % f_i(x) = (x-x_star{i})'*Q{i}*(x-x_star{i})
