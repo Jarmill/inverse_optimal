@@ -33,7 +33,7 @@ else
 end
 
 %% get the program
-[Fd, objd, indexer] = sdp_full_cons_lin_yalmip(y, Q, f, A, b, Aeq, beq)
+[Fd, objd, indexer] = sdp_full_cons_lin_yalmip(y, Q, f, A, b, Aeq, beq);
 
 %% solve the program
 opts = sdpsettings('solver', 'mosek', 'savesolveroutput', true, 'savesolverinput', true);
