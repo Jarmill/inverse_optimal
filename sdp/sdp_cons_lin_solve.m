@@ -1,14 +1,17 @@
-function [dist_rec, info] = sdp_uncons_solve(y, Q, x_star)
-%UNTITLED Summary of this function goes here
-%SDP_UNCONS_SOLVE get alower bound for the distance to  the
-%unconstrained global minimizers.
-[Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star);
+function [dist_rec, info] = sdp_cons_lin_solve(y, Q, f, A, b, Aeq, beq, DUAL)
+%SDP_CONS_LIN_SOLVE Summary of this function goes here
+%   Detailed explanation goes here
+
+if nargin < 8
+    DUAL = 0;
+end
+[Fd, objd, indexer] = sdp_full_cons_lin_yalmip(y, Q, f, A, b, Aeq, beq, DUAL);
 
 opts = sdpsettings('solver', 'mosek');
-% opts = sdpsettings('solver', 'mosek', 'savesolveroutput', true, 'savesolverinput', true);
+
+% opts = sd\psettings('solver', 'mosek', 'savesolveroutput', true, 'savesolverinput', true);
 sol = optimize(Fd, objd, opts);
 
-%export the result of the sdp
 info = struct;
 info.status = sol.problem;
 
@@ -22,7 +25,9 @@ if sol.problem == 0
     info.M_rec = M_rec_clean;
     info.e_rec = e_rec;
     info.alpha_rec = M_rec(indexer.a, 1);
-    info.x_rec = M_rec(indexer.x, 1);
+    info.x_rec = M_rec(indexer.a, 1);
+    info.mu_rec = M_rec(indexer.mu, 1);
+    info.lambda = value(indexer.lambda);
     
     
     %round M to get the approximate alpha, x
@@ -38,7 +43,6 @@ end
     info.dist_rec = dist_rec;
 
 
-% info.status = sol.problem;
 
 end
 
