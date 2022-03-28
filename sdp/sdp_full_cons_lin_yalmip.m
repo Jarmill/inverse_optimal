@@ -79,7 +79,7 @@ cons = [(M>=0):'PSD moments', (M(1,1) == 1):'1=1'; ...
 %now do the gradient constraints
 grad_term = zeros(n, 1, 'like', sdpvar);
 for j = 1:m
-    curr_term = Q{j}*xa(:, j) - f{j}*alpha(j);
+    curr_term = Q{j}*xa(:, j) + f{j}*alpha(j);
 %     curr_term = (Q{j} - Q{m})*xa(:, j) - (Q{j}*x_star{j} - Q{m}*x_star{m})*alpha(j);
     grad_term = grad_term + curr_term;
 end

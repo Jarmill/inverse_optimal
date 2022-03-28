@@ -2,7 +2,7 @@ function [func_bound, selector, vars] = cons_local_yalmip_model(y, Q, f, A, b, A
 %CONS_YALMIP_MODEL generate yalmip models for the constrained projection
 %problem
 %   Outputs:
-%       func_bound: minimize the quadratic sum_j alphaj (x'Qj x/2 -fj'x)
+%       func_bound: minimize the quadratic sum_j alphaj (x'Qj x/2  + fj'x)
 %       selector:   minimize norm(x-y)^2 when x has a cost from func_bound
 %       vars:       store sdpvars for x and alpha
 
@@ -29,7 +29,7 @@ end
 
 obj_func = zeros(1,1,'like', sdpvar);
 for j = 1:m
-    obj_func = obj_func + alpha(j)*(0.5*x'*Q{j}*x - f{j}'*x);
+    obj_func = obj_func + alpha(j)*(0.5*x'*Q{j}*x + f{j}'*x);
 end
 
 obj_selector = norm(x-y)^2;
