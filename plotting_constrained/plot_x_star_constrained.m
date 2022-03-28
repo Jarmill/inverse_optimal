@@ -67,7 +67,6 @@ multiplicity_flags = zeros(1, nf, 'logical');
 
 % Calculate the minima
 for ii = 1 : nf
-    ii
     % Get the matrix of minima
     x_opt = global_optima_set_qp(Q{ii}, phi{ii}, A, b, C, d, xl, xu, Nmesh);
     

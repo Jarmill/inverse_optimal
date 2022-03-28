@@ -101,7 +101,6 @@ end
 
 % Transform the whole set to a matrix
 xcomb = cell2mat(xcomb);
-size(xcomb)
 
 % Get the set shape differently for 2D and 3D
 if n == 2
