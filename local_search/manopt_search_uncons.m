@@ -35,7 +35,7 @@ out_rec.z = z_rec;
 out_rec.alpha = z_rec.^2;
 out_rec.x = x_opt_uncons(out_rec.alpha, Q, x_star);
 out_rec.cost = xcost;
-out_rec.dist = sqrt(2*xcost);
+out_rec.dist = sqrt(xcost);
 
 end
 
