@@ -12,7 +12,7 @@ func_min = out_func(1);
 %as possible
 out_selector = P_selector([alpha; func_min]);
 
-dist_rec = out_selector(1);
+dist_rec = sqrt(out_selector(1));
 x_rec = out_selector(2:end);
 
 end
