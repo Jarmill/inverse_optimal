@@ -25,7 +25,7 @@ if sol.problem == 0
     info.M_rec = M_rec_clean;
     info.e_rec = e_rec;
     info.alpha_rec = M_rec(indexer.a, 1);
-    info.x_rec = M_rec(indexer.a, 1);
+    info.x_rec = M_rec(indexer.x, 1);
     info.mu_rec = M_rec(indexer.mu, 1);
     info.lambda = value(indexer.lambda);
     
