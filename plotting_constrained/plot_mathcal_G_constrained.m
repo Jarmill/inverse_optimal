@@ -56,11 +56,11 @@ end
 % Second argument is passed
 if length(varargin) >= 2
     % Check validity
-    if ~isscalar(varargin{1})
+    if ~isscalar(varargin{2})
         error('smoothness parameter must be of a numeric scalar type.');
     end
     % If it is logical assign its value
-    smoothness = varargin{1};
+    smoothness = varargin{2};
 % First argument is not passed
 else
     % Default value is false (doesn't set smoothness)
@@ -128,7 +128,7 @@ elseif n == 3
     if shape    
         % Get the 3D shape differently if smoothness parameter is given
         if smoothness
-            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).', varargin{1});
+            set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).', smoothness);
         else
             set_shape = alphaShape(xcomb(1, :).', xcomb(2, :).', xcomb(3, :).');
         end
