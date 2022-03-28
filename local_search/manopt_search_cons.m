@@ -20,16 +20,13 @@ problem.M   = z;
 problem.cost = @(z) cost_cons_alpha(z.^2, P_func, P_selector);
 % problem.egrad = @(z) hproj_egrad_hadamard(z, Q, x_star, y, 0);
 
-%need to raise the gradient tolerance from 1e-6 to allow for
-%finite-difference approximations of the gradient
-%we do not expect that the constrained cost function will be continuous.
-options = struct('tolgradnorm', 1.0000e-04)
+
 if nargin == 8
 %     problem.X0 = sqrt(alpha0);
     z0 = sqrt(alpha0);
-    [z_rec, xcost, info, options] = trustregions(problem, z0, options);
+    [z_rec, xcost, info, options] = trustregions(problem, z0);
 else
-    [z_rec, xcost, info, options] = trustregions(problem, [], options);
+    [z_rec, xcost, info, options] = trustregions(problem, []);
 
 end
 
