@@ -17,16 +17,19 @@ elements = struct('A', z);
 [P_func,P_selector] = cons_local_optimizers(y, Q, f, A, b, Aeq, beq);
 
 problem.M   = z;
-problem.cost = @(z) cost_cons_alpha(z.^2, P_func, P_selector);
+
+%TODO: fix minimum distance selector code
+problem.cost = @(z) cost_cons_alpha(z.^2, P_func, P_selector, y);
 % problem.egrad = @(z) hproj_egrad_hadamard(z, Q, x_star, y, 0);
 
+options = struct('tolgradnorm', 1e-4);
 
 if nargin == 8
 %     problem.X0 = sqrt(alpha0);
     z0 = sqrt(alpha0);
-    [z_rec, xcost, info, options] = trustregions(problem, z0);
+    [z_rec, xcost, info, options] = trustregions(problem, z0, options);
 else
-    [z_rec, xcost, info, options] = trustregions(problem, []);
+    [z_rec, xcost, info, options] = trustregions(problem, [], options);
 
 end
 
@@ -39,10 +42,10 @@ out_rec.z = z_rec;
 out_rec.alpha = z_rec.^2;
 
 %slightly ineffecient to do one more QP call
-[out_rec.dist, out_rec.obj, out_rec.x] = cost_cons_alpha(out_rec.alpha, P_func, P_selector);
+[out_rec.norm2, out_rec.obj, out_rec.x] = cost_cons_alpha(out_rec.alpha, P_func, P_selector);
 % out_rec.x = x_opt_uncons(out_rec.alpha, Q, x_star);
 % out_rec.cost = xcost;
-% out_rec.dist = sqrt(xcost);
+out_rec.dist = sqrt(out_rec.norm2);
 
 end
 
