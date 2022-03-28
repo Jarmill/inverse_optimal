@@ -4,10 +4,18 @@ clear all;
 close all;
 clc;
 
+% The MOSEK solver directory
+mosek_dir = 'C:/Program Files/Mosek/9.3/toolbox/r2015a';
+% The yalmip directory
+yalmip_dir = 'C:\Users\Administrateur\Dropbox\GitHub\YALMIP-Master';
+
 % Dimension
-n = 3;
+n = 2;
 % Number of random matrices to generate
 nf = 5;
+
+% Set random seed
+rng(321, 'twister')
 
 % Get random Q's and x's
 Q = generate_random_Q(n, nf, [0.5 3]);
@@ -40,6 +48,14 @@ d_bfqcqp = zeros(1, size(y, 2));
 x_bflsq = zeros(size(y));
 alpha_bflsq = zeros(nf, size(y, 2));
 d_bflsq = zeros(1, size(y, 2));
+% Using SDP relaxation
+x_sdp = zeros(size(y));
+alpha_sdp = zeros(nf, size(y, 2));
+d_sdp = zeros(1, size(y, 2));
+% Using Manopt formulation
+x_mano = zeros(size(y));
+alpha_mano = zeros(nf, size(y, 2));
+d_mano = zeros(1, size(y, 2));
 
 % Do IOC for all points
 for ii = 1 : size(y, 2)
@@ -54,15 +70,40 @@ for ii = 1 : size(y, 2)
     [x_bfqcqp(:, ii), alpha_bfqcqp(:, ii), d_bfqcqp(:, ii)] = QCQP_IO(Q, x_star, y(:, ii), [x_bf(:, ii); alpha_bf(:, ii)]);
     [x_bflsq(:, ii), alpha_bflsq(:, ii), d_bflsq(:, ii)] = LSQ_IO(Q, x_star, y(:, ii), alpha_bf(:, ii));   
 end
+
+% Do IO for all points using SDP and Manopt
+% Add mosek and yalmip
+addpath(mosek_dir);
+addpath(genpath(yalmip_dir));
+% For each point
+for ii = 1 : size(y, 2)
     
-% Plot
+    % Perform sdp inverse optimization
+    [d_sdp(:, ii), info_sdp] = sdp_uncons_solve(y(:, ii), Q, x_star);
+    % Extract info
+    x_sdp(:, ii) = info_sdp.x_rec;
+    alpha_sdp(:, ii) = info_sdp.alpha_rec;
+    
+    % Perform manopt inverse optimization
+    [mano_out, info_mano] = manopt_search_uncons(Q, x_star, y(:, ii));
+    % Extract info
+    d_mano(:, ii) = mano_out.dist;
+    x_mano(:, ii) = mano_out.x;
+    alpha_mano(:, ii) = mano_out.alpha;
+end
+% Remove mosek and yalmip
+rmpath(mosek_dir);
+rmpath(genpath(yalmip_dir));
+
+    
+%% Plot
 fig = figure;
 fig.Position(1:2) = fig.Position(1:2) / 2;
 fig.Position(3:4) = [720, 540];
 hold all
 
 % Plot mesh
-n_mesh = 750;
+n_mesh = 5000;
 h_combined_sol = plot_mathcal_G(Q, x_star, n_mesh, 2);
 h_combined_sol.DisplayName = sprintf('$\\mathcal{G} =  \\{x | \\alpha_{%d : %d} \\} $', 1, nf);
 h_combined_sol.LineStyle = 'none';
@@ -79,8 +120,9 @@ for ii = 1 : length(h_lev)
 end
 
 % Plot the query point y and the solutions of inverse optimization
-cmap = copper(Nrand);
-sz = round(150 / ( Nrand + 1)) + 10;
+cmap = winter(Nrand);
+% sz = round(150 / ( Nrand + 1)) + 10;
+sz = 50;
 if n == 2
 h_query = scatter(y(1, :), y(2, :), sz, cmap, 'x', 'DisplayName', 'Query', 'LineWidth', 2);
 h_qcqp = scatter(x_qcqp(1, :), x_qcqp(2, :), sz, cmap, 'o', 'DisplayName', 'QCQP', 'LineWidth', 2);
@@ -88,6 +130,8 @@ h_lsq = scatter(x_lsq(1, :), x_lsq(2, :), sz, cmap, '^', 'DisplayName', 'LSQ', '
 h_bf = scatter(x_bf(1, :), x_bf(2, :), sz, cmap, 's', 'DisplayName', 'BF', 'LineWidth', 2);
 h_bfqcqp = scatter(x_bfqcqp(1, :), x_bfqcqp(2, :), sz, cmap, 'p', 'DisplayName', 'BF+QCQP', 'LineWidth', 2);
 h_bflsq = scatter(x_bflsq(1, :), x_bflsq(2, :), sz, cmap, 'h', 'DisplayName', 'BF+LSQ', 'LineWidth', 2);
+h_sdp = scatter(x_sdp(1, :), x_sdp(2, :), sz, cmap, '+', 'DisplayName', 'SDP', 'LineWidth', 2);
+h_mano = scatter(x_mano(1, :), x_mano(2, :), sz, cmap, '>', 'DisplayName', 'MANO', 'LineWidth', 2);
 end
 if n == 3
 h_query = scatter3(y(1, :), y(2, :), y(3, :), sz, cmap, 'x', 'DisplayName', 'Query', 'LineWidth', 2);
@@ -96,6 +140,8 @@ h_lsq = scatter3(x_lsq(1, :), x_lsq(2, :), x_lsq(3, :), sz, cmap, '^', 'DisplayN
 h_bf = scatter3(x_bf(1, :), x_bf(2, :), x_bf(3, :), sz, cmap, 's', 'DisplayName', 'BF', 'LineWidth', 2);
 h_bfqcqp = scatter3(x_bfqcqp(1, :), x_bfqcqp(2, :), x_bfqcqp(3, :), sz, cmap, 'p', 'DisplayName', 'BF+QCQP', 'LineWidth', 2);
 h_bflsq = scatter3(x_bflsq(1, :), x_bflsq(2, :), x_bflsq(3, :), sz, cmap, 'h', 'DisplayName', 'BF+LSQ', 'LineWidth', 2);
+h_sdp = scatter3(x_sdp(1, :), x_sdp(2, :), x_sdp(3, :), sz, cmap, '+', 'DisplayName', 'SDP', 'LineWidth', 2);
+h_mano = scatter3(x_mano(1, :), x_mano(2, :), x_mano(3, :), sz, cmap, '>', 'DisplayName', 'MANO', 'LineWidth', 2);
 end
 
 
@@ -123,8 +169,8 @@ axis square
 
 
 %% Plot distances
-dist_bars = {'QCQP', 'LSQ', 'BF', 'BF+QCQP', 'BF+LSQ'};
-dist_arr = [mean(d_qcqp), mean(d_lsq), mean(d_bf), mean(d_bfqcqp), mean(d_bflsq)];
+dist_bars = {'SDP', 'MANO', 'QCQP', 'LSQ', 'BF', 'BF+QCQP', 'BF+LSQ'};
+dist_arr = [mean(d_sdp), mean(d_mano), mean(d_qcqp), mean(d_lsq), mean(d_bf), mean(d_bfqcqp), mean(d_bflsq)];
 xtick_arr = 1 : length(dist_arr);
 
 % Sort in ascending manner
