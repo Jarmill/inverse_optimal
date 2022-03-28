@@ -34,7 +34,7 @@ if ~isequal(size(A, 1), size(b, 1)) || ~isequal(size(C, 1), size(d, 1))
 end
 
 % Solve the QP and get a single solution
-qpopt = optimoptions(@quadprog, 'Algorithm', 'Interior-point-convex', 'Display', 'Iter');
+qpopt = optimoptions(@quadprog, 'Algorithm', 'Interior-point-convex', 'Display', 'None');
 [x_opt, ~, exitflag, ~] = quadprog(Q, phi, C, d, A, b, xl, xu, [], qpopt);
 
 % If anything but convergence, or step-tolerance issue a warning
