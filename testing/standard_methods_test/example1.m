@@ -5,9 +5,9 @@ close all;
 clc;
 
 % The MOSEK solver directory
-mosek_dir = 'C:/Program Files/Mosek/9.3/toolbox/r2015a';
+mosek_dir = input_your_mosek_dir;
 % The yalmip directory
-yalmip_dir = 'C:\Users\Administrateur\Dropbox\GitHub\YALMIP-Master';
+yalmip_dir = input_your_yalmip_dir;
 
 % Dimension
 n = 2;
