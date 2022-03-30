@@ -1,10 +1,10 @@
 function [Fd, objd, indexer] = sdp_full_uncons_yalmip(y, Q, x_star, DUAL)
 %SDP_FULL_UNCONS: create an SDP in SDPT3 format for the distance to inverse
 %optimal control problem
-%
+
 % f_i(x) = (x-x_star{i})'*Q{i}*(x-x_star{i})
 % f_alpha = sum_i f_i(x)
-%
+
 %INPUTS (may change around)
 %   y:      test point outside the GO set
 %   Q:      Dictionary of hessians
@@ -95,7 +95,7 @@ else
     objd = objective;
 end
 
-indexer = struct('x', x_index, 'a', alpha_index, 'const', 1, 'M', M, 'dist', dist);
+indexer = struct('x', x_index, 'a', alpha_index, 'const', 1, 'M', M, 'dist', dist, 'nm', size(M, 1));
 
 % [model,recoverdata,diagnostic,interfacedata] = export(Fd, -objd, opts);
 

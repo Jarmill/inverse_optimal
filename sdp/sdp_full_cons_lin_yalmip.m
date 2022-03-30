@@ -198,7 +198,7 @@ else
     Fd = cons;
     objd = objective;
 end
-indexer = struct('x', x_index, 'a', alpha_index, 'mu', mu_index, 'const', 1, 'M', M, 'lambda', lambda, 'dist', dist);
+indexer = struct('x', x_index, 'a', alpha_index, 'mu', mu_index, 'const', 1, 'M', M, 'lambda', lambda, 'dist', dist, 'nm', size(M, 1));
 
 % [model,recoverdata,diagnostic,interfacedata] = export(Fd, -objd, opts);
 

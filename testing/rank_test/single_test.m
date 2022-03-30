@@ -9,11 +9,15 @@
 load('test3_data.mat');
 load('test3_derived.mat');
 
-%% local search solution
-%using yalmip in order to get the dual variables
-[func_bound, selector, vars] = cons_local_yalmip_model(y, Q, phi, Asdp, bsdp, Aeqsdp, beqsdp);
+bound = 2.89; %dual infeasible. this means that this bound is too large?
 
-opts = sdpsettings('solver', 'mosek');
-sol = optimize(func_bound.cons, func_bound.obj, opts);
+% bound = 3;
 
-x_rec = value(alpha
+
+input = struct('y', y, ...
+    'A', Asdp, 'b', bsdp, 'Aeq', Aeqsdp, 'beq', beqsdp, 'cons', 1);
+
+input.y = y;
+input.Q = Q;
+input.f=phi;
+ [dist_rec, info] = reweight_single(input, bound);
