@@ -34,10 +34,3 @@ x_sdp = info_sdp.x_rec;
 alpha_sdp = info_sdp.alpha_rec; 
 
 
-function f_out = f_in(alpha, P_func, y)
-%cost function to minimize the mixed quadratic
-funcdata = P_func(alpha);
-% f_out = xdata(1);
-f_out = norm(y - funcdata(2:end))^2;
-
-end
