@@ -77,7 +77,7 @@ if n == 2
     for ii = 1 : nf
         
         % Decompose hessian
-        [V, D] = eig(Q{ii});
+        [V, D] = eig(1/2*Q{ii});
         
         % Extract level
         l = levels(ii);
@@ -111,7 +111,7 @@ elseif n == 3
     for ii = 1 : nf
         
         % Decompose hessian
-        [V, D] = eig(Q{ii});
+        [V, D] = eig(1/2*Q{ii});
         
         % Extract level
         l = levels(ii);
