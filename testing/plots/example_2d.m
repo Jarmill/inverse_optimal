@@ -31,11 +31,14 @@ hold all
 
 % Plot mesh
 % n_mesh = 750;
-n_mesh = 1500;
-h_combined_sol = plot_mathcal_G(Q, x_star, n_mesh, 2);
+n_mesh = 10000;
+h_combined_sol = plot_mathcal_G(Q, x_star, n_mesh, 1, 0.35); %%% VERY CAREFUL ABOUT SMOOTHNESS
 h_combined_sol.DisplayName = sprintf('$\\mathcal{G} =  \\{x | \\alpha_{%d : %d} \\} $', 1, nf);
 h_combined_sol.LineStyle = 'none';
 h_combined_sol.FaceAlpha = 0.5;
+
+% Plot black arcs between minima
+h_arcs_between = plot_mathcal_G_all_arcs(Q, x_star, 20);
 
 % Plot solutions
 h_sol = plot_x_star(x_star, 150, winter(nf));
