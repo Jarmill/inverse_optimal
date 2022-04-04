@@ -181,6 +181,46 @@ end
 
 cons = [cons; (con_nonneg_mix>=0):'alpha & mu nonneg'];
 
+%% Valid inequalities (mu alpha smaller than mu)
+
+M_amu2 = M(alpha_index, mu_index);
+con_mua_lt_mu = zeros(m*n_ineq, 1, 'like', sdpvar);
+count_mix = 1;
+for i = 1:m
+    for j = 1:n_ineq
+        con_mua_lt_mu(count_mix) = mu(j) - M_amu2(i, j);
+        count_mix = count_mix+1;
+    end
+end
+
+cons = [cons; (con_mua_lt_mu>=0): 'alpha * mu less than mu'];
+
+%% Norm of mu ^2
+maxval = 2;
+
+cons_mu_lt_thresh = zeros(n_ineq, 1, 'like', sdpvar);
+count_mix = 1;
+for ii = 1 : n_ineq
+    cons_mu_lt_thresh(count_mix) = maxval - mu(ii);
+    count_mix = count_mix+1;
+end
+
+cons = [cons; (cons_mu_lt_thresh>=0): 'mu bounded'];
+%% Norm of mu ^2
+maxval = maxval^2;
+M_mu2 = M(mu_index, mu_index);
+
+cons_mu2_lt_thresh = zeros(n_ineq * (n_ineq+1)/2, 1, 'like', sdpvar);
+count_mix = 1;
+for ii = 1 : n_ineq
+    for jj = ii : n_ineq
+        cons_mu2_lt_thresh(count_mix) = maxval - M_mu2(ii, jj);
+        count_mix = count_mix+1;
+    end
+end
+
+cons = [cons; (cons_mu2_lt_thresh>=0): 'mu squared bounded'];
+
 %% get the objectives
 dist = sum(M(1,1)*y.^2 - 2*(x.*y) + x2);
 cons = [cons; (dist>=0):'distance is nonnegative'];
