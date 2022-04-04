@@ -93,7 +93,6 @@ if n == 2
     
 % For 3 dimensional
 elseif n == 3
-    affine_dimension(V, eps)
     % If number of vertices is just 2, draw a line
     if affine_dimension(V, eps) == 1
         h = plot3(V(1, :), V(2, :), V(3, :), varargin{:});
