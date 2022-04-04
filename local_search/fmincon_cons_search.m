@@ -1,4 +1,4 @@
-function [dist_fmincon,alpha_con, exitflag, output] = fmincon_cons_search(y, Q, phi, Asdp, bsdp, Aeqsdp, beqsdp)
+function [x_fmincon,dist_fmincon,alpha_con, exitflag, output] = fmincon_cons_search(y, Q, phi, Asdp, bsdp, Aeqsdp, beqsdp)
 %FMINCON_CONS_SEARCH Perform a local search of the constrained ProjGM
 %function using fmincon on alpha
 %   Detailed explanation goes here
@@ -25,7 +25,10 @@ function [dist_fmincon,alpha_con, exitflag, output] = fmincon_cons_search(y, Q, 
         = fmincon(@(alpha) f_in(alpha, P_func, y), alpha0, A, b, Aeq, beq, [], [], [], options);
 
     dist_fmincon = sqrt(fval);
-
+    % Out data
+    x_fmincon = P_func(alpha_con);
+    x_fmincon = x_fmincon(2:end);
+    
     function f_out = f_in(alpha, P_func, y)
         %cost function to minimize the mixed quadratic
         funcdata = P_func(alpha);
